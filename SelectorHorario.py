@@ -26,7 +26,7 @@ def seleccionarCarrera(carreras: list) -> Carrera:
     limpiarPantalla()
     print("Lista de carreras disponibles:\n")
     for i, carrera in enumerate(carreras):
-        print(f"{i + 1}. {carrera.getNombre()}")
+        print(f"{i + 1}. [{carrera.getNombre()}]")
 
     try:
         opcion = int(input("\nSelecciona una carrera (número): "))
@@ -46,8 +46,22 @@ def mostrarAsignaturas(carrera: Carrera):
         print("Debes seleccionar una carrera primero.")
     else:
         print(f"Asignaturas de la carrera {carrera.getNombre()}:\n")
-        for i, asignatura in enumerate(carrera.getAsignaturas()):
-            print(f"{i + 1}. {asignatura.getSigla()} - {asignatura.getNombre()}")
+    print(f"{'N°':<3} {'Sigla':<10} {'Nombre':<45} {'Plan':<10} {'Nivel':<10} {'# Secciones':<12}")
+    print("-" * 95)
+
+    asignaturas = carrera.getAsignaturas()
+
+    # Ordenar por plan, luego por nivel
+    asignaturas.sort(key=lambda a: (str(a.getPlan()), str(a.getNivel())))
+
+    for i, asignatura in enumerate(asignaturas, start=1):
+        sigla = asignatura.getSigla()
+        nombre = asignatura.getNombre()[:44]  # Evita que se desborde
+        plan = asignatura.getPlan()
+        nivel = asignatura.getNivel()
+        cantidad = len(asignatura.getSeccion())
+        print(f"{i:<3} {sigla:<10} {nombre:<45} {plan:<10} {nivel:<10} {cantidad:<12}")
+
     input("\nPresiona Enter para continuar...")
 
 def horariosChocan(horariosOcupados, nuevosHorarios):
@@ -68,10 +82,23 @@ def seleccionarAsignaturas(carrera: Carrera):
         input("\nPresiona Enter para continuar...")
         return asignaturasSeleccionadas
 
-    asignaturas = carrera.getAsignaturas()
     print("Selecciona las asignaturas (ingresa los números separados por coma, por ejemplo: 1,3,4):\n")
-    for i, asignatura in enumerate(asignaturas):
-        print(f"{i + 1}. Sigla: [{asignatura.getSigla()}] - Nombre: [{asignatura.getNombre()}] - Plan: [{asignatura.getPlan()}]")
+    print(f"\nAsignaturas de la carrera {carrera.getNombre()}:\n")
+    asignaturas = carrera.getAsignaturas()
+
+    # Ordenar por plan, luego por nivel
+    asignaturas.sort(key=lambda a: (str(a.getPlan()), str(a.getNivel())))
+
+    print(f"{'N°':<3} {'Sigla':<10} {'Nombre':<45} {'Plan':<10} {'Nivel':<10} {'# Secciones':<12}")
+    print("-" * 95)
+
+    for i, asignatura in enumerate(asignaturas, start=1):
+        sigla = asignatura.getSigla()
+        nombre = asignatura.getNombre()[:44]  # Evita que se desborde
+        plan = asignatura.getPlan()
+        nivel = asignatura.getNivel()
+        cantidad = len(asignatura.getSeccion())
+        print(f"{i:<3} {sigla:<10} {nombre:<45} {plan:<10} {nivel:<10} {cantidad:<12}")
 
     entrada = input("\nSelecciona: ")
     try:
@@ -89,14 +116,16 @@ def seleccionarAsignaturas(carrera: Carrera):
                 seleccion_valida = False
                 while not seleccion_valida:
                     limpiarPantalla()
-                    print(f"\nSecciones disponibles para {asignaturaOriginal.getSigla()} - {asignaturaOriginal.getNombre()}:")
+                    print(f"\nSecciones disponibles para [{asignaturaOriginal.getSigla()}] - [{asignaturaOriginal.getNombre()}]:\n")
 
-                    for j, seccion in enumerate(secciones):
-                        print(f"{j + 1}. Sección {seccion.getCodigo()} - Docente: {seccion.getDocente()}")
+                    for j, seccion in enumerate(secciones, start=1):
+                        print(f"{j}. Sección: [{seccion.getCodigo()}] | Docente: [{seccion.getDocente()}]")
                         for horario in seccion.getHorario():
-                            print(horario)
+                            print(f"[{horario}]")
+                        print()  # Espacio entre secciones
 
                     seleccion = input("Selecciona una sección (número, o 0 para cancelar): ")
+
                     try:
                         idx_seccion = int(seleccion.strip()) - 1
 
@@ -146,13 +175,16 @@ def verHorario(asignaturasSeleccionadas):
         print("No has seleccionado asignaturas aún.")
     else:
         print("Horario generado a partir de las asignaturas seleccionadas:\n")
+
         for asignatura in asignaturasSeleccionadas:
-            print(f"Sigla: [{asignatura.getSigla()}] - Nombre: [{asignatura.getNombre()}] - Plan: [{asignatura.getPlan()}]")
+            print(f"Sigla: [{asignatura.getSigla()}] - [{asignatura.getNombre()}]")
+            print(f"Plan: [{asignatura.getPlan()}]\n")
+
             for seccion in asignatura.getSeccion():
-                print(f"Sección: [{seccion.getCodigo()}] - Docente: [{seccion.getDocente()}]")
+                print(f"Sección: [{seccion.getCodigo()}] | Docente: [{seccion.getDocente()}]")
                 for horario in seccion.getHorario():
-                    print(horario)
-            print()
+                    print(f"[{horario}]")
+            print("-" * 80)
     input("Presiona Enter para continuar...")
 
 def generarExcelHorario(asignaturasSeleccionadas):
@@ -161,25 +193,52 @@ def generarExcelHorario(asignaturasSeleccionadas):
         input("Presiona Enter para continuar...")
         return
 
+    dias_abreviados = {
+        "Lu": "Lunes",
+        "Ma": "Martes",
+        "Mi": "Miércoles",
+        "Ju": "Jueves",
+        "Vi": "Viernes",
+        "Sa": "Sábado",
+        "Do": "Domingo"
+    }
+
     dias_semana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
-    bloques = ["08:15-09:45", "10:00-11:30", "11:45-13:15", "14:30-16:00", "16:15-17:45", "18:00-19:30", "19:45-21:15"]
-    
+    bloques = [
+        "08:31-09:50", "10:01-10:40", "10:41-11:20", "11:31-12:10",
+        "13:41-14:20", "14:31-15:10", "16:15-17:45", "18:00-19:30",
+        "19:01-20:20", "20:31-21:10", "21:11-22:30"
+    ]
+
     # Diccionario que usaremos para llenar la tabla
     horario = {bloque: {dia: "" for dia in dias_semana} for bloque in bloques}
 
     for asignatura in asignaturasSeleccionadas:
         for seccion in asignatura.getSeccion():
-            for hora in seccion.getHorario():
+            for horario_raw in seccion.getHorario():
                 try:
-                    dia, bloque = hora.split(" ")
-                    if bloque in horario and dia in horario[bloque]:
-                        contenido = f"{asignatura.getSigla()} ({seccion.getCodigo()})"
+                    partes = horario_raw.strip().split(" ")
+                    if len(partes) != 4 or partes[2] != "-":
+                        continue  # formato incorrecto
+
+                    dia_abrev = partes[0]
+                    hora_inicio = partes[1][:5]  # "11:31:00" -> "11:31"
+                    hora_fin = partes[3][:5]     # "12:10:00" -> "12:10"
+                    bloque = f"{hora_inicio}-{hora_fin}"
+
+                    dia = dias_abreviados.get(dia_abrev)
+
+                    print(f"[DEBUG] Día: {dia}, Bloque: {bloque}")
+
+                    if dia and bloque in horario and dia in horario[bloque]:
+                        contenido = f"{seccion.getCodigo()}"
                         if horario[bloque][dia]:
                             horario[bloque][dia] += " / " + contenido
                         else:
                             horario[bloque][dia] = contenido
-                except ValueError:
-                    continue  # Formato de horario no esperado
+                except Exception as e:
+                    print(f"[ERROR] {e}")
+                    continue
 
     # Crear archivo Excel
     wb = Workbook()
