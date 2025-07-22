@@ -3,6 +3,7 @@ class Asignatura:
         self._sigla = None
         self._nombre = None
         self._nivel = None
+        self._plan = None
         self._seccion = []
 
     def getNombre(self):
@@ -22,6 +23,12 @@ class Asignatura:
 
     def setNivel(self, nivel):
         self._nivel = nivel
+
+    def getPlan(self):
+        return self._plan
+    
+    def setPlan(self, plan):
+        self._plan = plan
 
     def getSeccion(self):
         return self._seccion
