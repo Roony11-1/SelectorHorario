@@ -1,0 +1,36 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Logs y otros archivos generados
+*.log
+
+# Archivos temporales de editores
+*.swp
+*.swo
+*.tmp
+*~
+
+# Entornos virtuales
+env/
+venv/
+ENV/
+VENV/
+.venv/
+
+# Archivos de configuración de VS Code
+.vscode/
+
+# Archivos de macOS
+.DS_Store
+
+# Archivos del sistema Windows
+Thumbs.db
+desktop.ini
+
+# Ignora CargadorCarrera.pyc si compila
+*.pyc
