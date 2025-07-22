@@ -46,9 +46,8 @@ class Asignatura:
     
     def imprimirAsignatura(self):
         secciones = self.getSeccion() or []
-        
-        print(f"-- Asignatura: {self.getNombre()} | Sigla: {self.getSigla()} | Nivel: {self.getNivel()} | Cantidad de secciones: {len(secciones)}")
-
+        print(f"    Asignatura: {self.getNombre()} | Sigla: {self.getSigla()} | Nivel: {self.getNivel()} | Plan: {self.getPlan()} | Secciones: {len(secciones)}")
+        print("")
         for seccion in secciones:
             seccion.imprimirSeccion()
         

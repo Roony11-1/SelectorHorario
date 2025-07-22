@@ -71,7 +71,6 @@ def horariosChocan(horariosOcupados, nuevosHorarios):
                 return ocupado  # Retorna la info de la asignatura y sección que choca
     return None
 
-
 def seleccionarAsignaturas(carrera: Carrera):
     limpiarPantalla()
     asignaturasSeleccionadas = []
@@ -122,7 +121,7 @@ def seleccionarAsignaturas(carrera: Carrera):
                         print(f"{j}. Sección: [{seccion.getCodigo()}] | Docente: [{seccion.getDocente()}]")
                         for horario in seccion.getHorario():
                             print(f"[{horario}]")
-                        print()  # Espacio entre secciones
+                        print()
 
                     seleccion = input("Selecciona una sección (número, o 0 para cancelar): ")
 

@@ -16,9 +16,8 @@ class Carrera:
         self._asignaturas = asignaturas
 
     def imprimirCarrera(self):
-        print(f"Nombre carrera: {self.getNombre()} | Cantidad de asignaturas: {len(self.getAsignaturas())}")
+        print(f"Nombre carrera: {self.getNombre()} | Cantidad de asignaturas: {len(self.getAsignaturas())}\n")
         
         for asignatura in self.getAsignaturas():
             asignatura.imprimirAsignatura()
-        
-        print(f"")
+            print("-" * 80)  # separador entre asignaturas

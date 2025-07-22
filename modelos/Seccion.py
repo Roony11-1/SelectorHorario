@@ -31,9 +31,9 @@ class Seccion:
         return hash(self._codigo)
 
     def imprimirSeccion(self):
-        print(f"---- Codigo Sección: {self._codigo} | Docente: {self._docente}")
-
+        print(f"        Sección: {self._codigo} | Docente: {self._docente}")
         for horario in self._horarios:
-            print(f"------ Horario: {horario}")
+            print(f"            Horario: [{horario}]")
+        print("")
 
         
